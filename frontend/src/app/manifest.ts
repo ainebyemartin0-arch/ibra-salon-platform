@@ -11,16 +11,22 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#000000',
     icons: [
       {
-        src: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=192&auto=format&fit=crop',
+        src: '/icon.png', // Using your local logo file!
         sizes: '192x192',
-        type: 'image/jpeg',
+        type: 'image/png',
         purpose: 'any',
       },
       {
-        src: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=512&auto=format&fit=crop',
+        src: '/icon.png', // Using your local logo file!
         sizes: '512x512',
-        type: 'image/jpeg',
+        type: 'image/png',
         purpose: 'any',
+      },
+      {
+        src: '/icon.png', // For iOS home screen
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
       },
     ],
   };
