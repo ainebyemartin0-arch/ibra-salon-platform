@@ -11,19 +11,19 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#000000',
     icons: [
       {
-        src: '/icon.png', // Using your local logo file!
+        src: '/logo.png', // Points to the logo.png file in your public folder
         sizes: '192x192',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/icon.png', // Using your local logo file!
+        src: '/logo.png', // Points to the logo.png file in your public folder
         sizes: '512x512',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/icon.png', // For iOS home screen
+        src: '/logo.png', // Ensures it looks perfect on iOS without a white box around it
         sizes: '512x512',
         type: 'image/png',
         purpose: 'maskable',
