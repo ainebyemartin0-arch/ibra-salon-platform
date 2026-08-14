@@ -28,7 +28,7 @@ export default function ManageStaff() {
     if (!token) { router.push("/login"); return; }
 
     try {
-      const res = await fetch("https://ibra-salon-platform.onrender.com/api/salon/staff/");
+      const res = await fetch("http://localhost:8000/api/salon/staff/");
       const data = await res.json();
       setBarbers(data);
       setLoading(false);
@@ -55,7 +55,7 @@ export default function ManageStaff() {
     }
 
     try {
-      const res = await fetch("https://ibra-salon-platform.onrender.com/api/salon/staff/", {
+      const res = await fetch("http://localhost:8000/api/salon/staff/", {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}` },
         body: formData
@@ -79,7 +79,7 @@ export default function ManageStaff() {
     if (!confirm("Are you sure you want to delete this barber?")) return;
 
     try {
-      const res = await fetch(`https://ibra-salon-platform.onrender.com/api/salon/staff/${id}/`, {
+      const res = await fetch(`http://localhost:8000/api/salon/staff/${id}/`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });

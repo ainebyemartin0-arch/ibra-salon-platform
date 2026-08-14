@@ -22,7 +22,7 @@ export default function ManageCustomers() {
     if (!token) { router.push("/login"); return; }
 
     try {
-      const res = await fetch("https://ibra-salon-platform.onrender.com/api/salon/customers/", {
+      const res = await fetch("http://localhost:8000/api/salon/customers/", {
         headers: { "Authorization": `Bearer ${token}` }
       });
       if (res.status === 401) { router.push("/login"); return; }

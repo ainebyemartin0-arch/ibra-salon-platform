@@ -16,7 +16,7 @@ export default function Contact() {
     setSubmitting(true);
 
     try {
-      const res = await fetch("https://ibra-salon-platform.onrender.com/api/salon/contact/", {
+      const res = await fetch("http://localhost:8000/api/salon/contact/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, message }),

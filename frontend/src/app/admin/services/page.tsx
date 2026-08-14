@@ -30,7 +30,7 @@ export default function ManageServices() {
     if (!token) { router.push("/login"); return; }
 
     try {
-      const res = await fetch("https://ibra-salon-platform.onrender.com/api/salon/services/");
+      const res = await fetch("http://localhost:8000/api/salon/services/");
       const data = await res.json();
       setServices(data);
       setLoading(false);
@@ -59,7 +59,7 @@ export default function ManageServices() {
     }
 
     try {
-      const res = await fetch("https://ibra-salon-platform.onrender.com/api/salon/services/", {
+      const res = await fetch("http://localhost:8000/api/salon/services/", {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}` },
         body: formData
@@ -83,7 +83,7 @@ export default function ManageServices() {
     if (!confirm("Are you sure you want to delete this service?")) return;
 
     try {
-      const res = await fetch(`https://ibra-salon-platform.onrender.com/api/salon/services/${id}/`, {
+      const res = await fetch(`http://localhost:8000/api/salon/services/${id}/`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });

@@ -17,7 +17,7 @@ export default function Login() {
 
     try {
       // 1. Send username & password to Django to get a JWT token
-      const res = await fetch("https://ibra-salon-platform.onrender.com/api/auth/login/", {
+      const res = await fetch("http://localhost:8000/api/auth/login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

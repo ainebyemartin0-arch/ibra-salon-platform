@@ -19,7 +19,7 @@ export default function StylesGallery() {
   const [activeFilter, setActiveFilter] = useState("ALL");
 
   useEffect(() => {
-    fetch("https://ibra-salon-platform.onrender.com/api/salon/styles/")
+    fetch("http://localhost:8000/api/salon/styles/")
       .then((res) => res.json())
       .then((data) => {
         setStyles(data);

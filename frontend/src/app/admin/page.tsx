@@ -39,7 +39,7 @@ export default function AdminDashboard() {
     if (!token) { router.push("/login"); return; }
 
     try {
-      const res = await fetch("https://ibra-salon-platform.onrender.com/api/salon/appointments/", {
+      const res = await fetch("http://localhost:8000/api/salon/appointments/", {
         headers: { "Authorization": `Bearer ${token}` }
       });
 
@@ -52,7 +52,7 @@ export default function AdminDashboard() {
       const data = await res.json();
       setAppointments(data);
       
-      const statsRes = await fetch("https://ibra-salon-platform.onrender.com/api/salon/admin/stats/", {
+      const statsRes = await fetch("http://localhost:8000/api/salon/admin/stats/", {
         headers: { "Authorization": `Bearer ${token}` }
       });
       const statsData = await statsRes.json();
@@ -73,7 +73,7 @@ export default function AdminDashboard() {
   const updateStatus = async (id: number, newStatus: string) => {
     const token = localStorage.getItem("ibra_token");
     try {
-      const res = await fetch(`https://ibra-salon-platform.onrender.com/api/salon/appointments/${id}/update/`, {
+      const res = await fetch(`http://localhost:8000/api/salon/appointments/${id}/update/`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify({ status: newStatus }),

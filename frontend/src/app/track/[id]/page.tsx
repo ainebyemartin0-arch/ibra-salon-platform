@@ -30,7 +30,7 @@ export default function TrackAppointment({ params }: { params: { id: string } })
 
     const fetchStatus = async () => {
       try {
-        const res = await fetch(`https://ibra-salon-platform.onrender.com/api/salon/appointments/${params.id}/track/`);
+        const res = await fetch(`http://localhost:8000/api/salon/appointments/${params.id}/track/`);
         if (!res.ok) throw new Error("Not found");
         const data = await res.json();
         

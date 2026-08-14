@@ -22,7 +22,7 @@ export default function NotificationBell() {
     if (!token) return;
 
     try {
-      const res = await fetch("https://ibra-salon-platform.onrender.com/api/salon/notifications/", {
+      const res = await fetch("http://localhost:8000/api/salon/notifications/", {
         headers: { "Authorization": `Bearer ${token}` }
       });
       if (res.ok) {
@@ -47,7 +47,7 @@ export default function NotificationBell() {
     try {
       // Mark all unread notifications as read
       for (const n of notifications.filter(n => !n.is_read)) {
-        await fetch(`https://ibra-salon-platform.onrender.com/api/salon/notifications/${n.id}/read/`, {
+        await fetch(`http://localhost:8000/api/salon/notifications/${n.id}/read/`, {
           method: "PATCH",
           headers: { "Authorization": `Bearer ${token}` }
         });

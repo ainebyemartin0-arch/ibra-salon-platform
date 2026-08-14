@@ -39,8 +39,8 @@ export default function ServicesPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetch("https://ibra-salon-platform.onrender.com/api/salon/services/").then(res => res.json()).then(data => setServices(data)).catch(err => console.error(err));
-    fetch("https://ibra-salon-platform.onrender.com/api/salon/staff/").then(res => res.json()).then(data => { setBarbers(data); setLoading(false); }).catch(err => { console.error(err); setLoading(false); });
+    fetch("http://localhost:8000/api/salon/services/").then(res => res.json()).then(data => setServices(data)).catch(err => console.error(err));
+    fetch("http://localhost:8000/api/salon/staff/").then(res => res.json()).then(data => { setBarbers(data); setLoading(false); }).catch(err => { console.error(err); setLoading(false); });
   }, []);
 
   const formatPrice = (price: string) => parseFloat(price).toLocaleString() + " UGX";
@@ -49,7 +49,7 @@ export default function ServicesPage() {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setSubmitting(true);
     try {
-      const response = await fetch("https://ibra-salon-platform.onrender.com/api/salon/appointments/create/", {
+      const response = await fetch("http://localhost:8000/api/salon/appointments/create/", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ service: selectedService?.id, staff: selectedBarber || null, start_time: new Date(dateTime).toISOString(), customer_name: customerName, customer_phone: customerPhone }),
       });
