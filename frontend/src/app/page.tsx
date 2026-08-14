@@ -7,7 +7,7 @@ import BeforeAfterSlider from "./components/BeforeAfterSlider";
 import Link from "next/link";
 
 export default function Home() {
-  const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } } };
+  const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } };
 
   // Premium image grid for visual appeal
   const galleryImages = [
