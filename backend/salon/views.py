@@ -13,10 +13,7 @@ from .serializers import (
 class ServiceListView(generics.ListCreateAPIView):
     queryset = Service.objects.filter(is_active=True)
     serializer_class = ServiceSerializer
-    permission_classes = [AllowAny] # Public can view
-
-    def get_serializer_context(self):
-        return super().get_serializer_context()
+    permission_classes = [AllowAny]
 
 class ServiceDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Service.objects.all()
@@ -26,9 +23,6 @@ class StaffListView(generics.ListCreateAPIView):
     queryset = Staff.objects.filter(is_active=True)
     serializer_class = StaffSerializer
     permission_classes = [AllowAny]
-
-    def get_serializer_context(self):
-        return super().get_serializer_context()
 
 class StaffDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Staff.objects.all()
@@ -59,6 +53,12 @@ class AppointmentUpdateView(generics.UpdateAPIView):
             customer.loyalty_points += points_earned
             customer.save()
 
+# NEW: Public Tracking Endpoint
+class AppointmentTrackView(generics.RetrieveAPIView):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentListSerializer
+    permission_classes = [AllowAny] # Anyone with the ID can track it
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def admin_stats(request):
@@ -69,25 +69,17 @@ def admin_stats(request):
     revenue_data = completed_appts.aggregate(total=Sum('service__price'))
     total_revenue = revenue_data['total'] if revenue_data['total'] is not None else 0
     avg_value = total_revenue / completed_count if completed_count > 0 else 0
-
     top_service_data = completed_appts.values('service__name').annotate(count=Count('id')).order_by('-count').first()
     top_service = top_service_data['service__name'] if top_service_data else "N/A"
     top_service_count = top_service_data['count'] if top_service_data else 0
-
     top_barber_data = completed_appts.exclude(staff=None).values('staff__name').annotate(revenue=Sum('service__price')).order_by('-revenue').first()
     top_barber = top_barber_data['staff__name'] if top_barber_data else "N/A"
     top_barber_revenue = top_barber_data['revenue'] if top_barber_data else 0
-
     return Response({
-        "today_revenue": total_revenue,
-        "completed_today": completed_count,
-        "pending_today": pending_count,
-        "total_appointments_today": all_appointments.count(),
-        "avg_booking_value": avg_value,
-        "top_service": top_service,
-        "top_service_count": top_service_count,
-        "top_barber": top_barber,
-        "top_barber_revenue": top_barber_revenue
+        "today_revenue": total_revenue, "completed_today": completed_count, "pending_today": pending_count,
+        "total_appointments_today": all_appointments.count(), "avg_booking_value": avg_value,
+        "top_service": top_service, "top_service_count": top_service_count,
+        "top_barber": top_barber, "top_barber_revenue": top_barber_revenue
     })
 
 @api_view(['POST'])
@@ -107,7 +99,6 @@ class ContactMessageCreateView(generics.CreateAPIView):
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
     permission_classes = [AllowAny]
-
     def perform_create(self, serializer):
         instance = serializer.save()
         Notification.objects.create(message=f"New contact message from {instance.name}", link="/admin")
@@ -115,7 +106,6 @@ class ContactMessageCreateView(generics.CreateAPIView):
 class NotificationListView(generics.ListAPIView):
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
-
     def get_queryset(self):
         return Notification.objects.all().order_by('-created_at')[:10]
 
@@ -123,10 +113,8 @@ class NotificationMarkReadView(generics.UpdateAPIView):
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ['patch']
-
     def get_queryset(self):
         return Notification.objects.all()
-
     def perform_update(self, serializer):
         serializer.save(is_read=True)
 
@@ -134,9 +122,6 @@ class StyleListView(generics.ListCreateAPIView):
     queryset = Style.objects.filter(is_featured=True)
     serializer_class = StyleSerializer
     permission_classes = [AllowAny]
-    
-    def get_serializer_context(self):
-        return super().get_serializer_context()
 
 class CustomerListView(generics.ListAPIView):
     queryset = Customer.objects.all().order_by('-created_at')
