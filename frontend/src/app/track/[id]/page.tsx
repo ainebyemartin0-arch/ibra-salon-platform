@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, use } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { motion } from "framer-motion";
@@ -15,10 +14,10 @@ interface AppointmentData {
   status: string;
 }
 
-export default function TrackAppointment({ params }: { params: { id: string } }) {
+export default function TrackAppointment({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params); // Unwrap the promise using React.use()
   const [appointment, setAppointment] = useState<AppointmentData | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     // Ask for browser notification permission immediately
@@ -30,7 +29,7 @@ export default function TrackAppointment({ params }: { params: { id: string } })
 
     const fetchStatus = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/api/salon/appointments/${params.id}/track/`);
+        const res = await fetch(`http://localhost:8000/api/salon/appointments/${id}/track/`);
         if (!res.ok) throw new Error("Not found");
         const data = await res.json();
         
@@ -61,7 +60,7 @@ export default function TrackAppointment({ params }: { params: { id: string } })
     const interval = setInterval(fetchStatus, 3000);
 
     return () => clearInterval(interval);
-  }, [params.id]);
+  }, [id]); 
 
   const getStatusUI = (status: string) => {
     switch(status) {

@@ -29,8 +29,10 @@ export default function Footer() {
           <p className="text-gray-400 text-sm mb-2">Mon - Fri: 8:00 AM - 8:00 PM</p>
         </div>
       </div>
-      <div className="border-t border-gray-800 py-6 text-center text-gray-500 text-xs">
-        © {new Date().getFullYear()} Ibra Salon. All rights reserved. Crafted with precision.
+      <div className="border-t border-gray-800 py-6 text-center text-gray-500 text-xs flex flex-col gap-1">
+        <span>© {new Date().getFullYear()} Ibra Salon. All rights reserved.</span>
+        {/* DEVELOPER CREDIT */}
+        <span className="text-gray-600">Developed by <span className="text-white font-medium">Ainebye Martin</span></span>
       </div>
     </footer>
   );

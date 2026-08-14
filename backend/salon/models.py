@@ -4,8 +4,19 @@ class Staff(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100, default='Barber')
     bio = models.TextField(blank=True)
-    image = models.URLField(blank=True, null=True, help_text="Direct image URL")
+    image_url = models.URLField(blank=True, null=True, help_text="Option 1: Paste direct image link (Unsplash, etc.)")
+    image_file = models.ImageField(upload_to='barbers/', blank=True, null=True, help_text="Option 2: Upload from device")
     is_active = models.BooleanField(default=True)
+
+    def get_image(self):
+        if self.image_url:
+            return self.image_url
+        try:
+            if self.image_file and hasattr(self.image_file, 'url'):
+                return self.image_file.url
+        except ValueError:
+            pass
+        return None
 
     def __str__(self):
         return f"{self.name} ({self.role})"
@@ -15,8 +26,19 @@ class Service(models.Model):
     description = models.TextField(blank=True)
     duration_mins = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.URLField(blank=True, null=True, help_text="Direct image URL")
+    image_url = models.URLField(blank=True, null=True, help_text="Option 1: Paste direct image link")
+    image_file = models.ImageField(upload_to='services/', blank=True, null=True, help_text="Option 2: Upload from device")
     is_active = models.BooleanField(default=True)
+
+    def get_image(self):
+        if self.image_url:
+            return self.image_url
+        try:
+            if self.image_file and hasattr(self.image_file, 'url'):
+                return self.image_file.url
+        except ValueError:
+            pass
+        return None
 
     def __str__(self):
         return f"{self.name} - {self.price} UGX"
@@ -61,8 +83,19 @@ class Style(models.Model):
     CATEGORY_CHOICES = [('FADES', 'Fades'), ('TAPERS', 'Tapers'), ('BEARDS', 'Beards'), ('DREADS', 'Dreads'), ('AFROS', 'Afros'), ('CAESAR', 'Caesar'), ('BOX_FADE', 'Box Fade'), ('NTEGE', 'Ntege (Push Back)'), ('LINE_UP', 'Line Up / Shape Up')]
     name = models.CharField(max_length=100)
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
-    image = models.URLField(help_text="Direct image URL")
+    image_url = models.URLField(blank=True, null=True, help_text="Option 1: Paste direct image link")
+    image_file = models.ImageField(upload_to='styles/', blank=True, null=True, help_text="Option 2: Upload from device")
     is_featured = models.BooleanField(default=True)
+
+    def get_image(self):
+        if self.image_url:
+            return self.image_url
+        try:
+            if self.image_file and hasattr(self.image_file, 'url'):
+                return self.image_file.url
+        except ValueError:
+            pass
+        return None
 
     def __str__(self):
         return f"{self.name} ({self.category})"

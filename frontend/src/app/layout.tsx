@@ -17,6 +17,9 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "Ibra Salon | Look Sharp. Feel Confident.",
   description: "Premium men's grooming and styling in Kampala. Book your appointment online in seconds.",
+  authors: [{ name: 'Ainebye Martin' }],
+  creator: 'Ainebye Martin',
+  publisher: 'Ainebye Martin',
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

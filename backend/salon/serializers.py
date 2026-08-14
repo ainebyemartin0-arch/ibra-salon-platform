@@ -4,14 +4,28 @@ from datetime import timedelta
 from .models import Service, Staff, Customer, Appointment, ContactMessage, Notification, Style
 
 class StaffSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
     class Meta:
         model = Staff
-        fields = '__all__'
+        fields = ['id', 'name', 'role', 'bio', 'is_active', 'image', 'image_url', 'image_file']
+    def get_image(self, obj):
+        request = self.context.get('request')
+        url = obj.get_image()
+        if url and request and not url.startswith('http'):
+            return request.build_absolute_uri(url)
+        return url
 
 class ServiceSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
     class Meta:
         model = Service
-        fields = '__all__'
+        fields = ['id', 'name', 'description', 'duration_mins', 'price', 'is_active', 'image', 'image_url', 'image_file']
+    def get_image(self, obj):
+        request = self.context.get('request')
+        url = obj.get_image()
+        if url and request and not url.startswith('http'):
+            return request.build_absolute_uri(url)
+        return url
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,11 +35,9 @@ class CustomerSerializer(serializers.ModelSerializer):
 class AppointmentCreateSerializer(serializers.ModelSerializer):
     customer_name = serializers.CharField(write_only=True)
     customer_phone = serializers.CharField(write_only=True)
-
     class Meta:
         model = Appointment
         fields = ['id', 'service', 'staff', 'start_time', 'customer_name', 'customer_phone']
-
     def validate(self, attrs):
         staff = attrs.get('staff')
         start_time = attrs.get('start_time')
@@ -41,7 +53,6 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
                 if appt.start_time <= start_time < appt_end:
                     raise ValidationError({"detail": f"{staff.name} is already booked at this time."})
         return attrs
-
     def create(self, validated_data):
         customer_name = validated_data.pop('customer_name')
         customer_phone = validated_data.pop('customer_phone')
@@ -56,7 +67,6 @@ class AppointmentListSerializer(serializers.ModelSerializer):
     service_name = serializers.CharField(source='service.name', read_only=True)
     service_price = serializers.CharField(source='service.price', read_only=True)
     staff_name = serializers.CharField(source='staff.name', read_only=True, default='Unassigned')
-
     class Meta:
         model = Appointment
         fields = ['id', 'customer_name', 'customer_phone', 'service_name', 'service_price', 'staff_name', 'start_time', 'status']
@@ -72,6 +82,13 @@ class NotificationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class StyleSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
     class Meta:
         model = Style
-        fields = '__all__'
+        fields = ['id', 'name', 'category', 'is_featured', 'image', 'image_url', 'image_file']
+    def get_image(self, obj):
+        request = self.context.get('request')
+        url = obj.get_image()
+        if url and request and not url.startswith('http'):
+            return request.build_absolute_uri(url)
+        return url

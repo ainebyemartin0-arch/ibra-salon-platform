@@ -16,7 +16,6 @@ export default function Login() {
     setError("");
 
     try {
-      // 1. Send username & password to Django to get a JWT token
       const res = await fetch("http://localhost:8000/api/auth/login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -29,10 +28,7 @@ export default function Login() {
         throw new Error(data.detail || "Invalid credentials");
       }
 
-      // 2. Save the token to browser storage
       localStorage.setItem("ibra_token", data.access);
-      
-      // 3. Redirect to the Admin Dashboard
       router.push("/admin");
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");
@@ -45,8 +41,8 @@ export default function Login() {
     <main className="min-h-screen bg-gray-50 flex items-center justify-center p-4 font-sans">
       <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-purple-600">Ibra Salon</h1>
-          <p className="text-gray-500 mt-2">Admin Dashboard Login</p>
+          <img src="/logo.png" alt="Ibra Salon Logo" className="h-12 w-auto mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-black tracking-tight">Admin Dashboard Login</h1>
         </div>
 
         {error && (
@@ -57,25 +53,25 @@ export default function Login() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <label className="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">Username</label>
             <input
               type="text"
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
               placeholder="admin"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">Password</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
               placeholder="••••••••"
             />
           </div>
@@ -83,11 +79,16 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:bg-gray-400"
+            className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors font-bold text-sm tracking-wider uppercase disabled:bg-gray-400"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        {/* DEVELOPER CREDIT */}
+        <div className="mt-8 text-center text-xs text-gray-400">
+          Developed by <span className="font-bold text-gray-600">Ainebye Martin</span>
+        </div>
       </div>
     </main>
   );
