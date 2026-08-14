@@ -4,7 +4,7 @@ class Staff(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100, default='Barber')
     bio = models.TextField(blank=True)
-    image = models.ImageField(upload_to='barbers/', blank=True, null=True)
+    image = models.URLField(blank=True, null=True, help_text="Direct image URL")
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -15,7 +15,7 @@ class Service(models.Model):
     description = models.TextField(blank=True)
     duration_mins = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='services/', blank=True, null=True, help_text="Optional service image")
+    image = models.URLField(blank=True, null=True, help_text="Direct image URL")
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -32,13 +32,7 @@ class Customer(models.Model):
         return f"{self.name} ({self.phone_number})"
 
 class Appointment(models.Model):
-    STATUS_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('CONFIRMED', 'Confirmed'),
-        ('COMPLETED', 'Completed'),
-        ('CANCELLED', 'Cancelled'),
-    ]
-
+    STATUS_CHOICES = [('PENDING', 'Pending'), ('CONFIRMED', 'Confirmed'), ('COMPLETED', 'Completed'), ('CANCELLED', 'Cancelled')]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     staff = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True)
@@ -64,21 +58,10 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Style(models.Model):
-    CATEGORY_CHOICES = [
-        ('FADES', 'Fades'),
-        ('TAPERS', 'Tapers'),
-        ('BEARDS', 'Beards'),
-        ('DREADS', 'Dreads'),
-        ('AFROS', 'Afros'),
-        ('CAESAR', 'Caesar'),
-        ('BOX_FADE', 'Box Fade'),
-        ('NTEGE', 'Ntege (Push Back)'),
-        ('LINE_UP', 'Line Up / Shape Up'),
-    ]
-    
+    CATEGORY_CHOICES = [('FADES', 'Fades'), ('TAPERS', 'Tapers'), ('BEARDS', 'Beards'), ('DREADS', 'Dreads'), ('AFROS', 'Afros'), ('CAESAR', 'Caesar'), ('BOX_FADE', 'Box Fade'), ('NTEGE', 'Ntege (Push Back)'), ('LINE_UP', 'Line Up / Shape Up')]
     name = models.CharField(max_length=100)
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
-    image = models.ImageField(upload_to='styles/', help_text="Upload hairstyle image")
+    image = models.URLField(help_text="Direct image URL")
     is_featured = models.BooleanField(default=True)
 
     def __str__(self):

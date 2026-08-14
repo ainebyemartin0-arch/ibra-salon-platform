@@ -4,35 +4,14 @@ from datetime import timedelta
 from .models import Service, Staff, Customer, Appointment, ContactMessage, Notification, Style
 
 class StaffSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-
     class Meta:
         model = Staff
         fields = '__all__'
 
-    def get_image(self, obj):
-        request = self.context.get('request')
-        if obj.image and hasattr(obj.image, 'url'):
-            if request:
-                return request.build_absolute_uri(obj.image.url)
-            return obj.image.url
-        return None
-
-# UPGRADED: Service Serializer with image absolute URL
 class ServiceSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-
     class Meta:
         model = Service
         fields = '__all__'
-
-    def get_image(self, obj):
-        request = self.context.get('request')
-        if obj.image and hasattr(obj.image, 'url'):
-            if request:
-                return request.build_absolute_uri(obj.image.url)
-            return obj.image.url
-        return None
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,42 +30,23 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
         staff = attrs.get('staff')
         start_time = attrs.get('start_time')
         service = attrs.get('service')
-
         if staff and start_time and service:
             end_time = start_time + timedelta(minutes=service.duration_mins)
-            overlapping = Appointment.objects.filter(
-                staff=staff,
-                status__in=['PENDING', 'CONFIRMED'],
-                start_time__gte=start_time,
-                start_time__lt=end_time
-            )
+            overlapping = Appointment.objects.filter(staff=staff, status__in=['PENDING', 'CONFIRMED'], start_time__gte=start_time, start_time__lt=end_time)
             if overlapping.exists():
                 raise ValidationError({"detail": f"{staff.name} is already booked at this time."})
-
             existing_appts = Appointment.objects.filter(staff=staff, status__in=['PENDING', 'CONFIRMED'])
             for appt in existing_appts:
                 appt_end = appt.start_time + timedelta(minutes=appt.service.duration_mins)
                 if appt.start_time <= start_time < appt_end:
                     raise ValidationError({"detail": f"{staff.name} is already booked at this time."})
-
         return attrs
 
     def create(self, validated_data):
         customer_name = validated_data.pop('customer_name')
         customer_phone = validated_data.pop('customer_phone')
-
-        customer, created = Customer.objects.get_or_create(
-            phone_number=customer_phone,
-            defaults={'name': customer_name}
-        )
-
-        appointment = Appointment.objects.create(
-            customer=customer,
-            service=validated_data['service'],
-            staff=validated_data.get('staff'),
-            start_time=validated_data['start_time'],
-            status='PENDING'
-        )
+        customer, created = Customer.objects.get_or_create(phone_number=customer_phone, defaults={'name': customer_name})
+        appointment = Appointment.objects.create(customer=customer, service=validated_data['service'], staff=validated_data.get('staff'), start_time=validated_data['start_time'], status='PENDING')
         Notification.objects.create(message=f"New booking request from {customer_name}", link="/admin")
         return appointment
 
@@ -112,16 +72,6 @@ class NotificationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class StyleSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-
     class Meta:
         model = Style
         fields = '__all__'
-
-    def get_image(self, obj):
-        request = self.context.get('request')
-        if obj.image and hasattr(obj.image, 'url'):
-            if request:
-                return request.build_absolute_uri(obj.image.url)
-            return obj.image.url
-        return None
